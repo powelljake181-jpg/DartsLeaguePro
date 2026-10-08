@@ -37,6 +37,11 @@ export async function openDatabase(opts: { url?: string; dataDir?: string; memor
     await migratePg(db, { migrationsFolder: MIGRATIONS });
     return db as unknown as Db;
   }
+  // In production, an in-process database must be chosen deliberately (PGLITE_DIR on a persistent
+  // disk): falling back silently would keep data on the host's temporary disk and lose it on deploy.
+  if (!opts.memory && !opts.dataDir && process.env.NODE_ENV === "production" && !process.env.PGLITE_DIR) {
+    throw new Error("DATABASE_URL is not set. Set it to your PostgreSQL connection string (or PGLITE_DIR to a persistent disk).");
+  }
   const dir = opts.dataDir ?? process.env.PGLITE_DIR ?? path.join(process.cwd(), ".data", "pglite");
   const client = opts.memory ? new PGlite() : new PGlite(dir);
   const db = drizzlePglite(client, { schema });

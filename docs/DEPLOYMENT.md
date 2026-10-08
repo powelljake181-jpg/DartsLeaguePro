@@ -23,9 +23,10 @@ after inactivity (spectators would lose live scores) and free databases expire.
 ### Cheaper alternative: PGlite on a persistent disk
 
 For a single small league, the web service can run without a managed database:
-leave `DATABASE_URL` unset and attach a Render **disk** (1 GB is plenty) mounted at
-`/opt/render/project/src/.data` — the app then keeps its PGlite database in
-`.data/pglite` on that disk. Trade-offs: no managed backups or point-in-time
+leave `DATABASE_URL` unset, attach a Render **disk** (1 GB is plenty) mounted at
+`/opt/render/project/src/.data`, and set `PGLITE_DIR=/opt/render/project/src/.data/pglite`.
+(In production the app refuses to start with neither `DATABASE_URL` nor
+`PGLITE_DIR`, so data can never end up on a temporary disk by accident.) Trade-offs: no managed backups or point-in-time
 restore (take your own copies of the disk), and the service can't scale beyond
 one instance (it can't anyway while realtime is in-process). Moving to Postgres
 later is a dump and restore.
@@ -66,7 +67,8 @@ DATABASE_URL=postgres://… SITE_URL=https://… CRON_SECRET=… npm start
 
 | Variable | Needed | Purpose |
 |---|---|---|
-| `DATABASE_URL` | yes | PostgreSQL connection string |
+| `DATABASE_URL` | yes (or `PGLITE_DIR`) | PostgreSQL connection string |
+| `PGLITE_DIR` | only without Postgres | In-process database directory on a persistent disk |
 | `SITE_URL` | recommended | Public address for links in external notifications |
 | `CRON_SECRET` | if using the delivery endpoint | Bearer token for `POST /api/notifications/deliver` |
 | `NOTIFY_CHANNELS` | no | External notification channels, comma-separated |
