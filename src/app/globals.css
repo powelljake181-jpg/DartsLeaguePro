@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+/* Design tokens. Light by default, dark when the device prefers it. */
+:root {
+  --background: #f4f6f5;
+  --surface: #ffffff;
+  --surface-muted: #eef2f0;
+  --foreground: #14201b;
+  --muted: #5b6b64;
+  --border: #d9e1dd;
+  --accent: #0e7a4f;
+  --accent-strong: #0a5c3b;
+  --accent-soft: #e2f3ea;
+  --on-accent: #ffffff;
+  --danger: #c0262d;
+  --danger-soft: #fdecec;
+  --warning: #9a5b00;
+  --warning-soft: #fff4e0;
+  --live: #e11d48;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0d1411;
+    --surface: #152019;
+    --surface-muted: #1b2a22;
+    --foreground: #e7efea;
+    --muted: #9db0a6;
+    --border: #2a3b32;
+    --accent: #3ccf8e;
+    --accent-strong: #6fe0ad;
+    --accent-soft: #173527;
+    --on-accent: #06130d;
+    --danger: #ff6b6f;
+    --danger-soft: #3a1618;
+    --warning: #ffbf5c;
+    --warning-soft: #33260f;
+    --live: #ff4d6d;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-live: var(--live);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Comfortable tap targets for phones in pubs. */
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}

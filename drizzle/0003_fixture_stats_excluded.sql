@@ -1,0 +1,1 @@
+ALTER TABLE "fixtures" ADD COLUMN "stats_excluded" boolean DEFAULT false NOT NULL;

@@ -1,0 +1,38 @@
+# Render Blueprint: one Node web service + one managed PostgreSQL database.
+# See docs/DEPLOYMENT.md. Plans below are the smallest that stay up permanently
+# (Render's free web services sleep, which breaks live scoring; free databases expire).
+databases:
+  - name: darts-league-db
+    plan: basic-256mb
+    region: frankfurt
+    databaseName: darts_league
+    user: darts_league
+    postgresMajorVersion: "17"
+
+services:
+  - type: web
+    name: darts-league
+    runtime: node
+    plan: starter
+    region: frankfurt
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    # Checks the app is up and can reach its database. Migrations run on startup.
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: darts-league-db
+          property: connectionString
+      # Public address, used in links sent by external notification channels,
+      # e.g. https://darts-league.onrender.com or your own domain.
+      - key: SITE_URL
+        sync: false
+      # Protects POST /api/notifications/deliver (for a cron job once email/WhatsApp channels exist).
+      - key: CRON_SECRET
+        generateValue: true
+      # Comma-separated external notification channels; in-app notifications need none.
+      - key: NOTIFY_CHANNELS
+        value: ""

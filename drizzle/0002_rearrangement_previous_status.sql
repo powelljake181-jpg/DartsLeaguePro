@@ -1,0 +1,1 @@
+ALTER TABLE "fixture_rearrangements" ADD COLUMN "previous_status" "fixture_status" DEFAULT 'SCHEDULED' NOT NULL;
